@@ -7,7 +7,7 @@ export const Rounds: FC = () => {
   return (
     <div className="w-fit">
       <h2 className="text-5xl ">Rounds</h2>
-      <h2 className="text-5xl text-primary">{rounds}</h2>
+      <h2 className="text-5xl text-palette-yellow">{rounds}</h2>
     </div>
   );
 };

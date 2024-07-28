@@ -1,6 +1,9 @@
+import { Navigation, Settings } from "@/components";
+import { Dialog } from "@/components/ui/dialog";
+import { Sheet } from "@/components/ui/sheet";
 import type { Metadata } from "next";
-import "./globals.css";
 import { pixel } from "./fonts";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Strategem Hero",
@@ -14,7 +17,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={pixel.className}>{children}</body>
+      <body className={pixel.className}>
+        <Sheet>
+          <Dialog>
+            <Navigation />
+            {children}
+            <Settings />
+          </Dialog>
+        </Sheet>
+      </body>
     </html>
   );
 }

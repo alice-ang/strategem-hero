@@ -1,8 +1,17 @@
+import { cn } from "@/lib/utils";
 import React, { FC, ReactNode } from "react";
 
-export const Constraints: FC<{ children: ReactNode }> = ({ children }) => {
+export const Constraints: FC<{ children: ReactNode; hasPadding?: boolean }> = ({
+  children,
+  hasPadding = false,
+}) => {
   return (
-    <div className="mx-auto max-w-screen-2xl h-full p-4  w-full">
+    <div
+      className={cn(
+        hasPadding ? "p-4" : "",
+        "mx-auto max-w-screen-2xl h-full w-full"
+      )}
+    >
       {children}
     </div>
   );

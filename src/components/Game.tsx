@@ -12,23 +12,25 @@ import {
 import React from "react";
 import { KeyCodes } from "@/lib/types";
 import { Constraints } from "./Constraints";
+import { useGameStore } from "@/lib/store/game";
 
 export const Game = () => {
   const [isLost, setIsLost] = useState(false);
   const [keys, setKeys] = useState<string[]>([]);
-  const { sequence, generateRandomKey } = useKeyCode();
 
-  const checkSequence = useCallback(() => {
-    if (keys.length >= sequence.length) {
-      setKeys([]);
-      generateRandomKey(5);
-    }
-    // keys.map((key, index) => {
-    //   if (sequence[index] !== key) {
-    //     setKeys([]);
-    //   }
-    // });
-  }, [keys, sequence, generateRandomKey]);
+  const { generateRandomStratagems, stratagemSequence } = useGameStore();
+
+  // const checkSequence = useCallback(() => {
+  //   if (keys.length >= sequence.length) {
+  //     setKeys([]);
+  //     generateRandomKey(5);
+  //   }
+  //   // keys.map((key, index) => {
+  //   //   if (sequence[index] !== key) {
+  //   //     setKeys([]);
+  //   //   }
+  //   // });
+  // }, [keys, sequence, generateRandomKey]);
 
   const getArrowIcon = (code: string | KeyCodes) => {
     switch (code) {
@@ -45,28 +47,24 @@ export const Game = () => {
     }
   };
 
-  const handleKeyPress = useCallback(
-    (event: KeyboardEvent) => {
-      switch (event.code) {
-        case "ArrowUp":
-          setKeys((prevKeys) => [...prevKeys, event.code]);
-          break;
-        case "ArrowDown":
-          setKeys((prevKeys) => [...prevKeys, event.code]);
-          break;
-        case "ArrowLeft":
-          setKeys((prevKeys) => [...prevKeys, event.code]);
-          break;
-        case "ArrowRight":
-          setKeys((prevKeys) => [...prevKeys, event.code]);
-          break;
-        default:
-          setKeys([]);
-      }
-      checkSequence();
-    },
-    [checkSequence]
-  );
+  const handleKeyPress = useCallback((event: KeyboardEvent) => {
+    switch (event.code) {
+      case "ArrowUp":
+        setKeys((prevKeys) => [...prevKeys, event.code]);
+        break;
+      case "ArrowDown":
+        setKeys((prevKeys) => [...prevKeys, event.code]);
+        break;
+      case "ArrowLeft":
+        setKeys((prevKeys) => [...prevKeys, event.code]);
+        break;
+      case "ArrowRight":
+        setKeys((prevKeys) => [...prevKeys, event.code]);
+        break;
+      default:
+        setKeys([]);
+    }
+  }, []);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
@@ -76,25 +74,31 @@ export const Game = () => {
   }, [handleKeyPress]);
 
   useEffect(() => {
-    generateRandomKey(5);
-  }, [generateRandomKey]);
+    generateRandomStratagems(5);
+  }, [generateRandomStratagems]);
+  console.log(stratagemSequence);
 
   return (
     <Constraints>
       <section className=" h-full w-full flex flex-col items-center justify-center ">
+        <div className="flex flex-row gap-4">
+          {stratagemSequence.map((strat, index) => (
+            <h2 key={strat.name}>{strat.name}</h2>
+          ))}
+        </div>
         <div className="flex flex-col items-center w-full space-y-10">
-          <div className="bg-primary w-full">
-            <h2 className="text-center text-background text-3xl uppercase">
+          <div className="bg-palette-yellow w-full">
+            <h2 className="text-center text-palette-background text-3xl uppercase">
               Strategem name
             </h2>
           </div>
           <div className="flex gap-4 text-6xl relative text-grey">
-            {sequence.map((key, index) => (
+            {stratagemSequence[0]?.code.map((key, index) => (
               <span key={index}>{getArrowIcon(key)}</span>
             ))}
             <div
               className={cn(
-                isLost ? "text-red-500" : "text-primary",
+                isLost ? "text-palette-red" : "text-palette-yellow",
                 "text-6xl flex gap-4 absolute bottom-0"
               )}
             >
@@ -103,7 +107,7 @@ export const Game = () => {
               ))}
             </div>
           </div>
-          <div className="bg-primary w-full">
+          <div className="bg-palette-yellow w-full">
             <h2 className="text-center text-3xl uppercase">-</h2>
           </div>
         </div>
